@@ -8,6 +8,10 @@ static_resources:
     - filters:
       - name: envoy.http_connection_manager
         config:
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: "/var/log/envoy_access.log"
           codec_type: auto
           stat_prefix: ingress_http
           route_config:
@@ -48,7 +52,7 @@ static_resources:
         address: service2
         port_value: 80
 admin:
-  access_log_path: "/dev/null"
+  access_log_path: "/var/log/envoy_admin_access.log"
   address:
     socket_address:
       address: 0.0.0.0

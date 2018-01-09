@@ -1,0 +1,48 @@
+filebeat:
+  # List of prospectors to fetch data.
+  prospectors:
+    # Each - is a prospector. Below are the prospector specific configurations
+    - type: log
+      enabled: true
+      paths:
+        - /var/log/envoy_access.log
+      fields_under_root: true
+      fields:
+        type: envoy-access
+
+    -
+      paths:
+        - "-"
+      input_type: stdin 
+      document_type: stdin
+
+tags: ["envoy"]
+
+logging:
+  level: info
+  to_syslog: false
+
+output:
+  elasticsearch:
+    enabled: true
+    hosts:
+      - es_host:9200
+    worker: 1
+    max_retries: 3
+    timeout: 90
+    #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+
+
+  logstash:
+    enabled: false
+    hosts:
+      - logstash:5043
+
+    #tls: 
+      # The path to your trusted SSL CA file. This is used
+      # to authenticate your downstream server.
+      #certificate_authorities:
+        #- /home/stack/lumberjack/logstash-forwarder.crt
+
+    # Network timeout in seconds.
+    timeout: 15

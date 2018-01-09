@@ -7,6 +7,7 @@ services:
       dockerfile: front-proxy/Dockerfile-frontenvoy
     volumes:
       - ./front-envoy.yaml:/etc/front-envoy.yaml
+      - logvolume:/var/log
     networks:
       - envoymesh
     expose:
@@ -15,6 +16,17 @@ services:
     ports:
       - "8000:80"
       - "8001:8001"
+
+  filebeat:
+    build:
+      context: .
+      dockerfile: Dockerfile-filebeat
+    volumes_from:
+      - front-envoy:ro
+    networks:
+      - envoymesh
+    extra_hosts:
+      - "es_host:<ip>"
 
   service1:
     build:
@@ -48,3 +60,6 @@ services:
 
 networks:
   envoymesh: {}
+
+volumes:
+  logvolume:
