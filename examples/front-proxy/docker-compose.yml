@@ -26,7 +26,8 @@ services:
     networks:
       - envoymesh
     extra_hosts:
-      - "es_host:<ip>"
+      #- "elasticsearch:<ip>"
+      - "logstash:<ip>"
 
   service1:
     build:
